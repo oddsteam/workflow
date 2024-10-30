@@ -36,3 +36,5 @@
 
 /workflow/app/assets/builds/*
 !/workflow/app/assets/builds/.keep
+
+.vscode/

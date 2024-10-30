@@ -6,9 +6,13 @@ export default class extends Controller {
   static values = { group: String };
 
   connect() {
-    Sortable.create(this.element, {
+    this.sortable = Sortable.create(this.element, {
       group: this.groupValue,
       animation: 150
     })
+  }
+
+  disconnect() {
+    this.sortable.destroy();
   }
 }

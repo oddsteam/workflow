@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
+  get "workspace" => "workspace#index", as: :workspace_index
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  get "board" => "board#index", as: :board_index
+  resources :board, :param => :key
+  # get "board" => "board#index"
+  # post "board" => "board#create"
+  # get "board/:key" => "board#show"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

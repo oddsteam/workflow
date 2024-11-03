@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_31_045310) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_03_063044) do
   create_table "boards", force: :cascade do |t|
     t.integer "user_id"
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "key"
+    t.index ["key"], name: "index_boards_on_key", unique: true
     t.index ["user_id"], name: "index_boards_on_user_id"
   end
 

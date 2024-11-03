@@ -10,6 +10,20 @@ class BoardController < ApplicationController
             )
         )
         if @board.save
+            # Auto create To do, Doing, Done swimlane
+            Swimlane.new(
+                board_id: @board[:id],
+                title: "To do"
+            ).save
+            Swimlane.new(
+                board_id: @board[:id],
+                title: "Doing"
+            ).save
+            Swimlane.new(
+                board_id: @board[:id],
+                title: "Done"
+            ).save
+
             redirect_to board_path(@board.key)
         else
             render_internal_server_error
@@ -24,6 +38,9 @@ class BoardController < ApplicationController
         unless @board
             render_not_found
         end
+        @swimlanes = Swimlane.where(
+            board_id: @board.id
+        )
     end
 
     private

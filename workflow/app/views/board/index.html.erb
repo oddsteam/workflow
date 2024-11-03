@@ -1,27 +1,38 @@
-<!-- board -->
-<div class="border border-red-100 flex flex-row flex-1 overflow-x-auto py-2 px-1 space-x-2 w-full" data-controller="draggable-item" data-draggable-item-group-value="board">
-    <% (1..20).each do |lane_index| %>
-    <!-- swim lane -->
-    <div class="flex flex-col p-1 border rounded bg-white cursor-pointer transition-all"
-        data-controller="lane-flex"
-        data-lane-flex-regular-width-value="w-72 max-w-72 min-w-72"
-        data-lane-flex-wide-width-value="w-[calc(50%)] min-w-[calc(100vw*5/6)] lg:min-w-[calc(100vw*3/4)] max-w-[calc(50%)]">
-        <div class="flex flex-row justify-between items-center p-1">
-            <h1 class="text-sm font-bold">Lane #<%= lane_index %></h1>
-            <button data-action="lane-flex#widen" data-lane-flex-target="widener">
-                <%= image_tag image_path("widener.svg"), class: "text-gray-900 w-5 h-5" %>
+<div class="container mx-auto px-4">
+    <h1 class="font-bold text-lg leading-10 mb-4 mt-2">My boards</h1>
+    <div class="grid grid-flow-row grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
+        <div class="w-full h-20 relative" data-controller="popup-trigger form-autofocus" data-action="popup-trigger:showed->form-autofocus#focus">
+            <button data-action="popup-trigger#show" class="z-0 absolute top-0 left-0 w-full h-full border-l-4 border-gray-300 rounded-r bg-gray-100 text-gray-500">
+                Create a new board
             </button>
-            <button data-action="lane-flex#restore" data-lane-flex-target="shrinker">
-                <%= image_tag image_path("shrinker.svg"), class: "text-gray-900 w-5 h-5" %>
-            </button>
-        </div>
-        <div class="flex flex-col flex-1 space-y-1 overflow-y-auto bg-slate-100" data-controller="draggable-item" data-draggable-item-group-value="swimlane">
-            <% (1..25).each do |card_index| %>
-            <div class="border rounded border-gray-300 p-2 cursor-pointer">
-                This is the item #<%= card_index %> from lane #<%= lane_index %>
+            <div data-popup-trigger-target="popup" class="hidden z-10 absolute -right-[calc(100%+8px)] top-0 w-[calc(100%)] bg-gray-200 rounded-md p-4">
+                <%= form_with   :method => :post, 
+                                :url => :board_index,
+                                :data => {  
+                                    "turbo": false,
+                                    "controller": "form-validator",
+                                    "action": "submit->form-validator#submit",
+                                    "form-validator-enabled-classes-value": "bg-blue-300 text-gray-200",
+                                    "form-validator-disabled-classes-value": "bg-gray-300 text-gray-400"
+                                } do |form| %>
+                    <div class="flex flex-col space-y-2">
+                        <div class="block">
+                            <label class="font-bold text-sm text-gray-500">Board title</lable>
+                        </div>
+                        <div class="block">
+                            <input type="text" class="w-full" data-form-autofocus-target="autofocus" required name="title">
+                        </div>
+                        <div class="block">
+                            <button class="w-full bg-blue-300 text-blue-700 font-bold py-2 rounded">Create</button>
+                        </div>
+                    </div>
+                <% end %>
             </div>
-            <% end %>
         </div>
-    </div>
+    <% @my_boards.each do |board| %>
+        <button class="w-full h-20 border-l-4 border rounded-r">
+        <%= link_to board[:title], board_path(board[:key]) %>
+        </button>
     <% end %>
+    </div>
 </div>

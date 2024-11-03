@@ -31,7 +31,7 @@
         </div>
     <% @my_boards.each do |board| %>
         <button class="w-full h-20 border-l-4 border rounded-r">
-        <%= board[:title] %>
+        <%= link_to board[:title], board_path(board[:key]) %>
         </button>
     <% end %>
     </div>

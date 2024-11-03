@@ -1,0 +1,27 @@
+<!-- board -->
+<div class="border border-red-100 flex flex-row flex-1 overflow-x-auto py-2 px-1 space-x-2 w-full" data-controller="draggable-item" data-draggable-item-group-value="board">
+    <% (1..20).each do |lane_index| %>
+    <!-- swim lane -->
+    <div class="flex flex-col p-1 border rounded bg-white cursor-pointer transition-all"
+        data-controller="lane-flex"
+        data-lane-flex-regular-width-value="w-72 max-w-72 min-w-72"
+        data-lane-flex-wide-width-value="w-[calc(50%)] min-w-[calc(100vw*5/6)] lg:min-w-[calc(100vw*3/4)] max-w-[calc(50%)]">
+        <div class="flex flex-row justify-between items-center p-1">
+            <h1 class="text-sm font-bold">Lane #<%= lane_index %></h1>
+            <button data-action="lane-flex#widen" data-lane-flex-target="widener">
+                <%= image_tag image_path("widener.svg"), class: "text-gray-900 w-5 h-5" %>
+            </button>
+            <button data-action="lane-flex#restore" data-lane-flex-target="shrinker">
+                <%= image_tag image_path("shrinker.svg"), class: "text-gray-900 w-5 h-5" %>
+            </button>
+        </div>
+        <div class="flex flex-col flex-1 space-y-1 overflow-y-auto bg-slate-100" data-controller="draggable-item" data-draggable-item-group-value="swimlane">
+            <% (1..25).each do |card_index| %>
+            <div class="border rounded border-gray-300 p-2 cursor-pointer">
+                This is the item #<%= card_index %> from lane #<%= lane_index %>
+            </div>
+            <% end %>
+        </div>
+    </div>
+    <% end %>
+</div>

@@ -1,4 +1,8 @@
 class BoardController < ApplicationController
+    def index()
+        @my_boards = Board.where(user_id: 1)
+    end
+
     def create()
         board_key = generate_unique_board_key
         board_title = params[:title]
@@ -13,15 +17,18 @@ class BoardController < ApplicationController
             # Auto create To do, Doing, Done swimlane
             Swimlane.new(
                 board_id: @board[:id],
-                title: "To do"
+                title: "To do",
+                ordering: 1
             ).save
             Swimlane.new(
                 board_id: @board[:id],
-                title: "Doing"
+                title: "Doing",
+                ordering: 2
             ).save
             Swimlane.new(
                 board_id: @board[:id],
-                title: "Done"
+                title: "Done",
+                ordering: 3
             ).save
 
             redirect_to board_path(@board.key)
@@ -35,12 +42,13 @@ class BoardController < ApplicationController
         @board = Board.find_by(
             key: board_key
         )
-        unless @board
+        if @board
+            @swimlanes = Swimlane.where(
+                board_id: @board.id
+            ).order(:ordering)
+        else
             render_not_found
         end
-        @swimlanes = Swimlane.where(
-            board_id: @board.id
-        )
     end
 
     private

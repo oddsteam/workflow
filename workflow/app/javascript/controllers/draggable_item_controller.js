@@ -6,13 +6,13 @@ export default class extends Controller {
   static values = { group: String };
 
   connect() {
-    this.sortable = Sortable.create(this.element, {
+    this.sortable = new Sortable(this.element, {
       group: this.groupValue,
-      animation: 150
-    })
+      animation: 150,
+      ghostClass: "ghost-class", // see application.tailwind.css for this utility class
+    });
   }
 
   disconnect() {
-    this.sortable.destroy();
   }
 }

@@ -12,7 +12,7 @@
                                     "turbo": false,
                                     "controller": "form-validator",
                                     "action": "submit->form-validator#submit",
-                                    "form-validator-enabled-classes-value": "bg-blue-300 text-gray-200",
+                                    "form-validator-enabled-classes-value": "bg-blue-500 text-white hover:bg-blue-400",
                                     "form-validator-disabled-classes-value": "bg-gray-300 text-gray-400"
                                 } do |form| %>
                     <div class="flex flex-col space-y-2">
@@ -23,16 +23,18 @@
                             <input type="text" class="w-full" data-form-autofocus-target="autofocus" required name="title">
                         </div>
                         <div class="block">
-                            <button class="w-full bg-blue-300 text-blue-700 font-bold py-2 rounded">Create</button>
+                            <button class="w-full font-bold py-2 rounded">Create</button>
                         </div>
                     </div>
                 <% end %>
             </div>
         </div>
     <% @my_boards.each do |board| %>
-        <button class="w-full h-20 border-l-4 border rounded-r">
-        <%= link_to board[:title], board_path(board[:key]) %>
-        </button>
+        <%= link_to board_path(board[:key]) do %>
+            <div class="w-full h-20 border-l-4 border rounded-r flex flex-row justify-start items-start p-2 font-bold text-gray-600">
+                <%= board[:title] %>
+            </div>
+        <% end %>
     <% end %>
     </div>
 </div>

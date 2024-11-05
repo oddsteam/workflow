@@ -11,3 +11,9 @@
 }
 
 */
+
+@layer utilities {
+  .ghost-class {
+    @apply bg-gray-500 text-gray-200;
+  }
+}

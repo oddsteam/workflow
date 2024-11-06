@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  get "workspace" => "board#index"
+  get "workspace" => "board#index", as: :workspace
   resources :board, :param => :key
 
   # get "board" => "board#index"

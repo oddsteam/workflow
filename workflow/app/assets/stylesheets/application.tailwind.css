@@ -14,6 +14,12 @@
 
 @layer utilities {
   .ghost-class {
+    @apply text-white;
+  }
+  .chosen-class {
     @apply bg-gray-500 text-gray-200;
+  }
+  .drag-class {
+    @apply bg-white text-gray-400;
   }
 }

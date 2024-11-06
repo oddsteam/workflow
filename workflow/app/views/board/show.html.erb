@@ -10,10 +10,10 @@ Board <%= @board.title %>
         data-lane-flex-wide-width-value="w-[calc(50%)] min-w-[calc(100vw*5/6)] lg:min-w-[calc(100vw*3/4)] max-w-[calc(50%)]">
         <div class="flex flex-row justify-between items-center p-1">
             <h1 class="text-sm font-bold"><%= lane[:title] %></h1>
-            <button data-action="lane-flex#widen" data-lane-flex-target="widener">
+            <button data-action="lane-flex#widen" data-lane-flex-target="widener" title="Expand swimlane">
                 <%= image_tag image_path("widener.svg"), class: "text-gray-900 w-5 h-5" %>
             </button>
-            <button data-action="lane-flex#restore" data-lane-flex-target="shrinker">
+            <button data-action="lane-flex#restore" data-lane-flex-target="shrinker" title="Restore swimlane">
                 <%= image_tag image_path("shrinker.svg"), class: "text-gray-900 w-5 h-5" %>
             </button>
         </div>

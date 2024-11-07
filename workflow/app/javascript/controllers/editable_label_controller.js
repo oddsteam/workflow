@@ -26,13 +26,15 @@ export default class extends Controller {
     this.inputTarget.classList.add('hidden');
   }
 
-  confirm() {
+  confirm(event) {
+    event.preventDefault();
     this.dispatch('changed', { detail: { original: this.originalValue, new: this.input.value }, prefix: this.identifierValue });
     this.view();
     console.log('changed', { detail: { original: this.originalValue, new: this.input.value }, prefix: this.identifierValue });
   }
 
-  cancel() {
+  cancel(event) {
+    event.preventDefault();
     this.input.value = this.originalValue;
     this.view();
     console.log('cancelled', { detail: { original: this.originalValue }, prefix: this.identifierValue });

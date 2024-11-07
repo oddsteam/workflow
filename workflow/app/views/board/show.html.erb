@@ -1,5 +1,10 @@
-<div class="flex flex-row items-baseline py-2 px-4 bg-gray-100 border-b space-x-2">
-    <div class="font-bold text-lg"><%= @board.title %></div>
+<div class="flex flex-row items-baseline py-2 px-4 bg-gray-100 border-b space-x-4">
+    <%= render "shared/editable-label", 
+        label: @board.title,
+        label_class: "font-bold text-lg border border-transparent",
+        editor_class: "font-bold text-lg",
+        identifier: "board-title"
+    %>
     <%= link_to "Back to workspace", 
         :workspace,
         class: "text-sm text-gray-500 hover:text-gray-800" %>
@@ -17,10 +22,10 @@
         <div class="flex flex-row justify-between items-center p-1">
             <h1 class="text-sm font-bold"><%= lane[:title] %></h1>
             <button data-action="lane-flex#widen" data-lane-flex-target="widener" title="Expand swimlane">
-                <%= image_tag image_path("widener.svg"), class: "text-gray-900 w-5 h-5" %>
+                <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
             </button>
             <button data-action="lane-flex#restore" data-lane-flex-target="shrinker" title="Restore swimlane">
-                <%= image_tag image_path("shrinker.svg"), class: "text-gray-900 w-5 h-5" %>
+                <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
             </button>
         </div>
         <div class="flex flex-col flex-1 space-y-1 overflow-y-auto"

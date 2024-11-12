@@ -7,12 +7,12 @@ export default class extends Controller {
 
   connect() {
     this.view();
-    this.inputTarget.addEventListener("keydown", this.handleKeyDown.bind(this));
     this.input = this.inputTarget.querySelector('input');
+    this.input.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   disconnect() {
-    this.inputTarget.removeEventListener("keydown", this.handleKeyDown.bind(this)); 
+    this.input.removeEventListener("keydown", this.handleKeyDown.bind(this)); 
   }
 
   edit() {
@@ -41,8 +41,13 @@ export default class extends Controller {
   }
 
   handleKeyDown(event) {
-    if (event.key === "Escape") {
-      this.cancel();
+    switch (event.key){
+      case "Escape":
+        this.cancel(event);
+        break;
+      case "Enter":
+        this.confirm(event);
+        break;
     }
   }
 }

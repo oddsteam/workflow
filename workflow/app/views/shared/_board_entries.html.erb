@@ -8,13 +8,14 @@
                     :class => "flex flex-row flex-1 w-full bg-white p-0",
                     :data => {  
                         "turbo": true,
-                        "controller": "draggable-item form-autosubmit",
+                        "controller": "form-autosubmit",
                         "action": "swimlanes:moved@window->form-autosubmit#submitEventData",
-                        "item-group-value": "board",
-                        "draggable-item-identifier-value": "swimlanes",
-                        "id": @board.id
                     } do |form| %>
-        <div class="flex flex-row flex-1 flex-nowrap space-x-2 w-full bg-white p-4 overflow-x-auto">
+        <div class="flex flex-row flex-1 flex-nowrap space-x-2 w-full bg-white p-4 overflow-x-auto"
+            data-controller="draggable-item"
+            data-draggable-item-group-value="board"
+            data-draggable-item-identifier-value="swimlanes"
+            data-id="<%=@board.id%>">
             <% board.swimlanes.each_with_index do |lane, lane_index| %>
             <!-- swim lane -->
             <div class="flex flex-col p-2 border rounded cursor-pointer transition-all flex-1"

@@ -17,71 +17,84 @@ class SwimlaneController < ApplicationController
             post_data = JSON.parse(request.body.read)
 
             swimlane_id = post_data['draggedItemID']
-            new_index = post_data['destinationIndex']
-            source_index = post_data['sourceIndex']
-            if valid_move?(swimlane_id, @board, new_index)
+            new_ordering = post_data['destinationIndex'] + 1 # Index starting from zero, ordering is index + 1
+            source_ordering = post_data['sourceIndex'] + 1
+            if valid_move?(swimlane_id, @board, new_ordering)
                 begin
                     ActiveRecord::Base.transaction do
-                        if source_index < new_index
-                            # Shift lower part down
-                            swimlane_index = source_index
-                            @board.swimlanes.where("? < ordering and ordering <= ?", source_index, new_index).find_each do |swimlane|
-                                Rails.logger.debug("ID #{swimlane}: #{swimlane.ordering} -> #{swimlane_index}")
-                                swimlane.update!(ordering: swimlane_index)
-                                swimlane_index += 1
-                            end
+                        if source_ordering < new_ordering
+                            query = "UPDATE swimlanes SET ordering = ordering - 1 WHERE ? < ordering and ordering <= ?"
+                            sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, source_ordering, new_ordering])
+                            ActiveRecord::Base.connection.execute(sanitized_query)
                         else
-                            # Shift upper part up
-                            swimlane_index = new_index + 1
-                            @board.swimlanes.where("? <= ordering and ordering < ?", new_index, source_index).find_each do |swimlane|
-                                Rails.logger.debug("ID #{swimlane}: #{swimlane.ordering} -> #{swimlane_index}")
-                                swimlane.update!(ordering: swimlane_index)
-                                swimlane_index += 1
-                            end
+                            query = "UPDATE swimlanes SET ordering = ordering + 1 WHERE ? <= ordering and ordering < ?"
+                            sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, new_ordering, source_ordering])
+                            ActiveRecord::Base.connection.execute(sanitized_query)
                         end
 
                         # Insert to the slot
-                        Swimlane.where(id: swimlane_id).find_each do |swimlane|
-                            Rails.logger.debug("ID #{swimlane}: #{swimlane.ordering} -> #{new_index}")
-                            swimlane.update!(ordering: new_index)
-                        end
+                        Swimlane.where(id: swimlane_id).update(ordering: new_ordering)
                     end
-
-                    # reload board
-                    @board = Board.includes(swimlanes: :items)
-                        .find_by(key: board_key)
-                    if !@board.present?
-                        respond_to do |format|
-                            format.turbo_stream { render turbo_stream: turbo_stream.replace('board_entries', partial: 'shared/board_entries', locals: { board: @board }) }
-                            format.html { render file: "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error }
-                            format.any  { head :internal_server_error }
-                        end
-                    else
-                        render_not_found
-                    end            
                 rescue => e
                     # something went wrong, transaction rolled back
+                    Rails.logger.error(e)
                     raise ActiveRecord::Rollback
                     render_internal_server_error
                 end
+
+                begin
+                    ActiveRecord::Base.transaction do
+                        query = <<~SQL
+                            UPDATE swimlanes
+                            SET ordering = p.row_number
+                            FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM swimlanes) AS p
+                            WHERE swimlanes.id = p.id
+                            AND swimlanes.board_id = ?;
+                        SQL
+                        sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, @board.id])
+                        ActiveRecord::Base.connection.execute(sanitized_query)
+                    end
+                rescue => e
+                    # something went wrong, transaction rolled back
+                    Rails.logger.error(e)
+                    raise ActiveRecord::Rollback
+                    render_internal_server_error
+                end
+
+                # reload board
+                @board = Board.includes(swimlanes: :items)
+                    .find_by(key: board_key)
+                if @board.present?
+                    respond_to do |format|
+                        format.turbo_stream { render turbo_stream: turbo_stream.replace('board_entries', partial: 'shared/board_entries', locals: { board: @board }) }
+                        format.html { render file: "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error }
+                        format.any  { head :internal_server_error }
+                    end
+                else
+                    Rails.logger.debug("board is updated but cannot be refreshed")
+                    render_not_found
+                end            
             else
                 render_forbidden
             end
         else
+            Rails.logger.debug("board is not updated because board is not found")
             render_not_found
         end
     end
 
     private
 
-    def valid_move?(swimlane_id, board, new_index)
+    def valid_move?(swimlane_id, board, new_ordering)
         # Validate operation : valid item?
-        if new_index < 1
+        if new_ordering < 0
+            Rails.logger.debug("Negative ordering detected")
             return false
         end
 
         @swimlane = Swimlane.where(board_id: board.id, id: swimlane_id)
         if !@swimlane.present?
+            Rails.logger.debug("Moving swimlane does not present in the board")
             return false
         end
         

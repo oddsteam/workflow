@@ -3,7 +3,7 @@ import Sortable from 'sortablejs';
 
 // Connects to data-controller="draggable-item"
 export default class extends Controller {
-  static values = { group: String, listName: String, uniqueIdAttribute: String };
+  static values = { group: String, listName: String, uniqueIdAttribute: String, identifier: String };
 
   connect() {
     this.uniqueIdAttribute = this.uniqueIdAttributeValue;
@@ -24,27 +24,40 @@ export default class extends Controller {
   }
 
   onEnd(event) {
-    const draggedItem = event.item.getAttribute(this.uniqueIdAttribute);
-    const sourceList = event.from.getAttribute(this.uniqueIdAttribute);
-    const destinationList = event.to.getAttribute(this.uniqueIdAttribute);
+    const draggedItemID = Number.parseInt(event.item.getAttribute(this.uniqueIdAttribute), 10);
+    const sourceListID = Number.parseInt(event.from.getAttribute(this.uniqueIdAttribute), 10);
+    const destinationListID = Number.parseInt(event.to.getAttribute(this.uniqueIdAttribute), 10);
     const sourceOrder = Array.from(event.from.children)
-      .map((child) => child.getAttribute(this.uniqueIdAttribute));
+      .filter((child) => child.getAttribute('data-draggable-child') === 'true')
+      .map((child) => Number.parseInt(child.getAttribute(this.uniqueIdAttribute), 10));
     const destinationOrder = Array.from(event.to.children)
-      .map((child) => child.getAttribute(this.uniqueIdAttribute));
+    .filter((child) => child.getAttribute('data-draggable-child') === 'true')
+      .map((child) => Number.parseInt(child.getAttribute(this.uniqueIdAttribute), 10));
+    const destinationIndex = event.newIndex;
+    const sourceIndex = event.oldIndex;
 
     const eventData = {
-      draggedItem,
-      sourceList,
+      draggedItemID,
+      sourceListID,
       sourceOrder,
-      destinationList,
+      sourceIndex,
+      destinationListID,
       destinationOrder,
+      destinationIndex,
     };
 
     console.log(eventData);
-    if (eventData.sourceList === eventData.destinationList) {
-      console.log(`list id ${eventData.sourceList} is reordered.`);
-    } else {
-      console.log(`item id ${eventData.draggedItem} is dragged from list id ${eventData.sourceList} to list id ${eventData.destinationList}.`);
+    if (eventData.sourceListID === eventData.destinationListID && eventData.sourceIndex === eventData.destinationIndex) {
+      console.log('Unchanged positioning detected.');
+      return;
     }
+
+    if (eventData.sourceListID === eventData.destinationListID) {
+      console.log(`Reordering in list id ${eventData.sourceListID} detected.`);
+    } else {
+      console.log(`Crossed-List reordering from list id ${eventData.sourceListID} to list id ${eventData.destinationListID} detected with item id ${eventData.draggedItemID}.`);
+    }
+    console.log('moved', { detail: eventData, prefix: this.identifierValue });
+    this.dispatch('moved', { detail: eventData, prefix: this.identifierValue });
   }
 }

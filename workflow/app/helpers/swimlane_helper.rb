@@ -1,0 +1,2 @@
+module SwimlaneHelper
+end

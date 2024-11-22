@@ -39,14 +39,9 @@ class BoardController < ApplicationController
 
     def show()
         board_key = params[:key]
-        @board = Board.find_by(
-            key: board_key
-        )
-        if @board
-            @swimlanes = Swimlane.where(
-                board_id: @board.id
-            ).order(:ordering)
-        else
+        @board = Board.includes(swimlanes: :items)
+                    .find_by(key: board_key)
+        if !@board.present?
             render_not_found
         end
     end

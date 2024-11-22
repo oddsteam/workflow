@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_03_135207) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_22_075822) do
   create_table "boards", force: :cascade do |t|
     t.integer "user_id"
     t.string "title"
@@ -27,6 +27,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_03_135207) do
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "ordering"
     t.index ["swimlane_id"], name: "index_items_on_swimlane_id"
     t.index ["user_id"], name: "index_items_on_user_id"
   end
@@ -36,7 +37,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_03_135207) do
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "ordering"
+    t.float "ordering"
     t.index ["board_id"], name: "index_swimlanes_on_board_id"
   end
 

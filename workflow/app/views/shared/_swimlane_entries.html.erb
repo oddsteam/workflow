@@ -1,0 +1,43 @@
+<%= turbo_frame_tag "swimlane_#{swimlane.id}_entries",
+                    :class => "inline-flex",
+                    :data => {
+                        turbo_cache_control: "no-cache",
+                        id: swimlane.id
+                    } do %>
+    <%= form_with   :method => :post, 
+                    :url => item_position_path(board.key),
+                    :class => "hidden",
+                    :data => {
+                        "turbo": true,
+                        "controller": "form-autosubmit",
+                        "action": "items#{swimlane.id}:moved@window->form-autosubmit#submitEventData"
+                    } do |form| %>
+    <% end %>
+    <!-- swim lane -->
+    <div class="flex flex-col p-2 border rounded cursor-pointer transition-all flex-1"
+        data-controller="lane-flex"
+        data-lane-flex-regular-width-value="w-72 max-w-72 min-w-72"
+        data-lane-flex-wide-width-value="w-[calc(50%)] min-w-[calc(100vw*5/6)] lg:min-w-[calc(100vw*3/4)] max-w-[calc(50%)]">
+        <div class="flex flex-row justify-between items-center p-1">
+            <h1 class="text-sm font-bold"><%= swimlane[:title] %></h1>
+            <button data-action="lane-flex#widen:prevent" data-lane-flex-target="widener" title="Expand swimlane">
+                <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+            </button>
+            <button data-action="lane-flex#restore:prevent" data-lane-flex-target="shrinker" title="Restore swimlane">
+                <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+            </button>
+        </div>
+        <div class="flex flex-col flex-1 space-y-1 overflow-y-auto"
+            data-controller="draggable-item"
+            data-draggable-item-group-value="swimlane"
+            data-draggable-item-list-name-value="swimlane_<%= swimlane.id %>"
+            data-draggable-item-identifier-value="items<%= swimlane.id %>"
+            data-id="<%= swimlane.id %>">
+            <% swimlane.items.each_with_index do |item, item_index| %>
+            <div class="border rounded border-gray-300 p-2 cursor-pointer bg-slate-100" data-id="<%= item.id %>">
+                <%= item.title %>
+            </div>
+            <% end %>
+        </div>
+    </div>
+<% end %>

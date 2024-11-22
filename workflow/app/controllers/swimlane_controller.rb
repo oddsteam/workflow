@@ -2,11 +2,11 @@ class SwimlaneController < ApplicationController
     def move
         # Example payload
         # {
-        #   "draggedItem":"0",
-        #   "sourceList":"root",
+        #   "draggedItemID":"0",
+        #   "sourceListID":"root",
         #   "sourceOrder":[null,"1","0","2"],
         #   "sourceIndex":1,
-        #   "destinationList":"root",
+        #   "destinationListID":"root",
         #   "destinationOrder":[null,"1","0","2"],
         #   "destinationIndex":2
         # }
@@ -47,9 +47,8 @@ class SwimlaneController < ApplicationController
                         query = <<~SQL
                             UPDATE swimlanes
                             SET ordering = p.row_number
-                            FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM swimlanes) AS p
-                            WHERE swimlanes.id = p.id
-                            AND swimlanes.board_id = ?;
+                            FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM swimlanes WHERE swimlanes.board_id = ?) AS p
+                            WHERE swimlanes.id = p.id;
                         SQL
                         sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, @board.id])
                         ActiveRecord::Base.connection.execute(sanitized_query)
@@ -73,7 +72,7 @@ class SwimlaneController < ApplicationController
                 else
                     Rails.logger.debug("board is updated but cannot be refreshed")
                     render_not_found
-                end            
+                end
             else
                 render_forbidden
             end

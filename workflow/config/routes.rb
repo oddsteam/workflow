@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "workspace" => "board#index", as: :workspace
   resources :board, :param => :key
   post "board/:key/swimlane/move" => "swimlane#move", as: :swimlane_position
+  post "board/:key/item/move" => "item#move", as: :item_position
 
   # get "board" => "board#index"
   # post "board" => "board#create"

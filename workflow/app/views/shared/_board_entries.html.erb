@@ -5,48 +5,20 @@
                     } do %>
     <%= form_with   :method => :post, 
                     :url => swimlane_position_path(board.key),
-                    :class => "flex flex-row flex-1 w-full bg-white p-0",
+                    :class => "hidden",
                     :data => {  
                         "turbo": true,
                         "controller": "form-autosubmit",
                         "action": "swimlanes:moved@window->form-autosubmit#submitEventData",
                     } do |form| %>
-        <div class="flex flex-row flex-1 flex-nowrap space-x-2 w-full bg-white p-4 overflow-x-auto"
-            data-controller="draggable-item"
-            data-draggable-item-group-value="board"
-            data-draggable-item-identifier-value="swimlanes"
-            data-id="<%=@board.id%>">
-            <% board.swimlanes.each_with_index do |lane, lane_index| %>
-            <!-- swim lane -->
-            <div class="flex flex-col p-2 border rounded cursor-pointer transition-all flex-1"
-                data-draggable-child="true"
-                data-controller="lane-flex"
-                data-lane-flex-regular-width-value="w-72 max-w-72 min-w-72"
-                data-lane-flex-wide-width-value="w-[calc(50%)] min-w-[calc(100vw*5/6)] lg:min-w-[calc(100vw*3/4)] max-w-[calc(50%)]"
-                data-id="<%= lane.id %>">
-                <div class="flex flex-row justify-between items-center p-1">
-                    <h1 class="text-sm font-bold"><%= lane[:title] %></h1>
-                    <button data-action="lane-flex#widen:prevent" data-lane-flex-target="widener" title="Expand swimlane">
-                        <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
-                    </button>
-                    <button data-action="lane-flex#restore:prevent" data-lane-flex-target="shrinker" title="Restore swimlane">
-                        <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
-                    </button>
-                </div>
-                <div class="flex flex-col flex-1 space-y-1 overflow-y-auto"
-                    data-controller="draggable-item"
-                    data-draggable-item-group-value="swimlane"
-                    data-draggable-item-list-name-value="swimlane_<%= lane.id %>"
-                    data-draggable-item-identifier-value="items"
-                    data-id="<%= lane_index %>">
-                    <% lane.items.each_with_index do |item, item_index| %>
-                    <div class="border rounded border-gray-300 p-2 cursor-pointer bg-slate-100" data-id="<%= item.id %>">
-                        <%= item.title %>
-                    </div>
-                    <% end %>
-                </div>
-            </div>
-            <% end %>
-        </div>
     <% end %>
+    <div class="flex flex-row flex-1 flex-nowrap space-x-2 w-full bg-white p-4 overflow-x-auto"
+        data-controller="draggable-item"
+        data-draggable-item-group-value="board"
+        data-draggable-item-identifier-value="swimlanes"
+        data-id="<%=@board.id%>">
+        <% board.swimlanes.each do |swimlane| %>
+            <%= render "shared/swimlane_entries", board: board, swimlane: swimlane %>
+        <% end %>
+    </div>
 <% end %>

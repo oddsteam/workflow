@@ -6,10 +6,7 @@ export default class extends Controller {
   static values = { group: String, listName: String, uniqueIdAttribute: String, identifier: String };
 
   connect() {
-    this.uniqueIdAttribute = this.uniqueIdAttributeValue;
-    if (!this.uniqueIdAttribute) {
-      this.uniqueIdAttribute = "data-id";
-    }
+    this.uniqueIdAttribute = this.uniqueIdAttributeValue || "data-id";
     this.sortable = new Sortable(this.element, {
       group: this.groupValue,
       animation: 150,
@@ -28,10 +25,8 @@ export default class extends Controller {
     const sourceListID = Number.parseInt(event.from.getAttribute(this.uniqueIdAttribute), 10);
     const destinationListID = Number.parseInt(event.to.getAttribute(this.uniqueIdAttribute), 10);
     const sourceOrder = Array.from(event.from.children)
-      .filter((child) => child.getAttribute('data-draggable-child') === 'true')
       .map((child) => Number.parseInt(child.getAttribute(this.uniqueIdAttribute), 10));
     const destinationOrder = Array.from(event.to.children)
-    .filter((child) => child.getAttribute('data-draggable-child') === 'true')
       .map((child) => Number.parseInt(child.getAttribute(this.uniqueIdAttribute), 10));
     const destinationIndex = event.newIndex;
     const sourceIndex = event.oldIndex;

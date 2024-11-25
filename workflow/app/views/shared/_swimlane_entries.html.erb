@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "swimlane_#{swimlane.id}_entries",
-                    :class => "inline-flex",
+                    :class => "inline-flex rounded",
                     :data => {
                         turbo_cache_control: "no-cache",
                         id: swimlane.id
@@ -38,6 +38,11 @@
             <% swimlane.items.each_with_index do |item, item_index| %>
                 <%= render "shared/item_entry", board: board, item: item %>
             <% end %>
+        </div>
+        <div class="flex flex-row justify-between items-center p-1">
+            <button class="text-sm text-gray-400 hover:text-gray-600">
+                + Add item
+            </button>
         </div>
     </div>
 <% end %>

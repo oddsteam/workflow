@@ -36,9 +36,7 @@
             data-draggable-item-identifier-value="items<%= swimlane.id %>"
             data-id="<%= swimlane.id %>">
             <% swimlane.items.each_with_index do |item, item_index| %>
-            <div class="border rounded border-gray-300 p-2 cursor-pointer bg-slate-100" data-id="<%= item.id %>">
-                <%= item.title %>
-            </div>
+                <%= render "shared/item_entry", board: board, item: item %>
             <% end %>
         </div>
     </div>

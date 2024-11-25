@@ -1,0 +1,10 @@
+<%= turbo_frame_tag "item_#{item.id}_entry",
+                    :class => "block",
+                    :data => {
+                        turbo_cache_control: "no-cache",
+                        id: item.id
+                    } do %>
+    <div class="border rounded border-gray-300 p-2 cursor-pointer bg-slate-100">
+        <%= item.title %>
+    </div>
+<% end %>

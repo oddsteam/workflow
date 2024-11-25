@@ -20,12 +20,14 @@
         data-lane-flex-wide-width-value="w-[calc(50%)] min-w-[calc(100vw*5/6)] lg:min-w-[calc(100vw*3/4)] max-w-[calc(50%)]">
         <div class="flex flex-row justify-between items-center p-1">
             <h1 class="text-sm font-bold"><%= swimlane[:title] %></h1>
-            <button data-action="lane-flex#widen:prevent" data-lane-flex-target="widener" title="Expand swimlane">
-                <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
-            </button>
-            <button data-action="lane-flex#restore:prevent" data-lane-flex-target="shrinker" title="Restore swimlane">
-                <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
-            </button>
+            <div class="flex">
+                <button data-action="lane-flex#widen:prevent" data-lane-flex-target="widener" title="Expand swimlane">
+                    <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+                </button>
+                <button data-action="lane-flex#restore:prevent" data-lane-flex-target="shrinker" title="Restore swimlane">
+                    <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+                </button>
+            </div>
         </div>
         <div class="flex flex-col flex-1 space-y-1 overflow-y-auto"
             data-controller="draggable-item"

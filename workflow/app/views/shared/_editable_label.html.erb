@@ -3,7 +3,7 @@
         data-editable-label-target="label"
         data-action="editable-label#edit">
         <span class="<%= label_class %>"><%= label %></span>
-        <%= inline_svg_tag "edit.svg", class: "text-gray-400 h-4 aspect-square block hover:text-gray-600" %>
+        <%= inline_svg_tag "edit.svg", class: "text-gray-400 h-4 aspect-square block hover:text-gray-600 transition-all" %>
     </button>
     <div class="flex flex-row flex-1 items-baseline space-x-2 bg-white border border-gray-400 p-2 leading-6" data-editable-label-target="input">
         <input type="text" class="<%= editor_class%> flex-1 border-none h-full outline-none p-0 focus:border-none focus:outline-none focus:ring-0" value="<%= h label %>">

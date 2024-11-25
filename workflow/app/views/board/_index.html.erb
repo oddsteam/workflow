@@ -9,10 +9,10 @@
         <div class="flex flex-row justify-between items-center p-1">
             <h1 class="text-sm font-bold">Lane #<%= lane_index %></h1>
             <button data-action="lane-flex#widen" data-lane-flex-target="widener">
-                <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+                <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600 transition-all" %>
             </button>
             <button data-action="lane-flex#restore" data-lane-flex-target="shrinker">
-                <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+                <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600 transition-all" %>
             </button>
         </div>
         <div class="flex flex-col flex-1 space-y-1 overflow-y-auto bg-slate-100" data-controller="draggable-item" data-draggable-item-group-value="swimlane">

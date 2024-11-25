@@ -22,10 +22,10 @@
             <h1 class="text-sm font-bold"><%= swimlane[:title] %></h1>
             <div class="flex">
                 <button data-action="lane-flex#widen:prevent" data-lane-flex-target="widener" title="Expand swimlane">
-                    <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+                    <%= inline_svg_tag "widen.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600 transition-all" %>
                 </button>
                 <button data-action="lane-flex#restore:prevent" data-lane-flex-target="shrinker" title="Restore swimlane">
-                    <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600" %>
+                    <%= inline_svg_tag "shrink.svg", class: "text-gray-400 w-4 h-4 hover:text-gray-600 transition-all" %>
                 </button>
             </div>
         </div>
@@ -39,9 +39,10 @@
                 <%= render "shared/item_entry", board: board, item: item %>
             <% end %>
         </div>
-        <div class="flex flex-row justify-between items-center p-1">
-            <button class="text-sm text-gray-400 hover:text-gray-600">
-                + Add item
+        <div class="flex flex-row justify-start p-1">
+            <button class="flex flex-row align-center items-center gap-1 text-sm group">
+                <%= inline_svg_tag "add.svg", class: "w-3 h-3 text-gray-400 group-hover:text-gray-600 transition-all" %>
+                <span class="text-gray-400 group-hover:text-gray-600 transition-all">Add item</span>
             </button>
         </div>
     </div>

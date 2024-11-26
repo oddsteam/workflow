@@ -15,7 +15,7 @@ if Rails.env.development?
     @scrum_board = Board.new(title: "Scrum", key: "scrum-123456", user_id: 1)
     @scrum_board.save
 
-    @initiative_lane = Swimlane.new(board_id: @kanban_board[:id], title: "Initiative", ordering: 1)
+    @initiative_lane = Swimlane.new(board_id: @kanban_board[:id], title: "Initiatives", ordering: 1)
     @initiative_lane.save
     Swimlane.new(board_id: @kanban_board[:id], title: "To do", ordering: 2).save
     Swimlane.new(board_id: @kanban_board[:id], title: "Doing", ordering: 3).save

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :board, :param => :key
   post "board/:key/swimlane/move" => "swimlane#move", as: :swimlane_position
   post "board/:key/item/move" => "item#move", as: :item_position
+  post "board/:key/swimlane/:lane/item" => "item#create", as: :item_creation
 
   # get "board" => "board#index"
   # post "board" => "board#create"

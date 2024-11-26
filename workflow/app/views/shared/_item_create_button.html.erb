@@ -1,0 +1,17 @@
+<%= turbo_frame_tag "swimlane_#{swimlane.id}_item_creation_button",
+            :class => "inline-flex rounded",
+            :data => {
+                turbo_cache_control: "no-cache",
+                id: swimlane.id
+            } do %>
+    <%= form_with   :method => :post, 
+                    :url => item_creation_path(board.key, swimlane.id),
+                    :data => {
+                        "turbo": true,
+                    } do |form| %>
+    <button class="flex flex-row align-center items-center gap-1 text-sm group">
+        <%= inline_svg_tag "add.svg", class: "w-3 h-3 text-gray-400 group-hover:text-gray-600 transition-all" %>
+        <span class="text-gray-400 group-hover:text-gray-600 transition-all">Add item</span>
+    </button>
+    <% end %>
+<% end %>

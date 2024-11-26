@@ -40,10 +40,7 @@
             <% end %>
         </div>
         <div class="flex flex-row justify-start p-1">
-            <button class="flex flex-row align-center items-center gap-1 text-sm group">
-                <%= inline_svg_tag "add.svg", class: "w-3 h-3 text-gray-400 group-hover:text-gray-600 transition-all" %>
-                <span class="text-gray-400 group-hover:text-gray-600 transition-all">Add item</span>
-            </button>
+            <%= render "shared/item_create_button", board: board, swimlane: swimlane %>
         </div>
     </div>
 <% end %>

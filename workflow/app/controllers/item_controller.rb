@@ -1,4 +1,57 @@
 class ItemController < ApplicationController
+    def create
+        board_key = params[:key]
+        lane_id = params[:lane]
+        @board = Board.find_by(key: board_key)
+        if @board.present?
+            @swimlane = Swimlane.where(board_id: @board.id, id: lane_id)
+            if @swimlane.present?
+                new_ordering = (Item.maximum(:ordering) || 0) + 1
+                @item = Item.new(title: "", swimlane_id: lane_id, user_id: 1, ordering: new_ordering).save
+
+                # Confirm ordering
+                begin
+                    ActiveRecord::Base.transaction do
+                        query = <<~SQL
+                            UPDATE items
+                            SET ordering = p.row_number
+                            FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM items WHERE items.swimlane_id = ?) AS p
+                            WHERE items.id = p.id;
+                        SQL
+                        sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, lane_id])
+                        ActiveRecord::Base.connection.execute(sanitized_query)
+                    end
+                rescue => e
+                    # something went wrong, transaction rolled back
+                    Rails.logger.error(e)
+                    raise ActiveRecord::Rollback
+                    render_internal_server_error
+                end
+
+                @board = Board.includes(swimlanes: :items)
+                    .find_by(key: board_key)
+                swimlane = @board.swimlanes.where(id: lane_id).first
+                respond_to do |format|
+                    format.turbo_stream {
+                        render turbo_stream: [
+                            turbo_stream
+                                .replace("swimlane_#{lane_id}_entries",
+                                partial: "shared/swimlane_entries",
+                                locals: { board: @board, swimlane: swimlane }),
+                            turbo_stream
+                                .replace("swimlane_#{lane_id}_item_creation_button",
+                                partial: "shared/item_create_button",
+                                locals: { board: @board, swimlane: swimlane })
+                        ]
+                    }
+                    format.html { render file: "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error }
+                    format.any  { head :internal_server_error }
+                end
+                return
+            end
+        end
+    end
+
     def move
         # Example payload
         # {
@@ -61,32 +114,33 @@ class ItemController < ApplicationController
                     render_internal_server_error
                 end
 
-                # begin
-                #     ActiveRecord::Base.transaction do
-                #         query = <<~SQL
-                #             UPDATE items
-                #             SET ordering = p.row_number
-                #             FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM items WHERE items.swimlane_id = ?) AS p
-                #             WHERE items.id = p.id;
-                #         SQL
-                #         sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, source_list_id])
-                #         ActiveRecord::Base.connection.execute(sanitized_query)
+                # Confirm ordering
+                begin
+                    ActiveRecord::Base.transaction do
+                        query = <<~SQL
+                            UPDATE items
+                            SET ordering = p.row_number
+                            FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM items WHERE items.swimlane_id = ?) AS p
+                            WHERE items.id = p.id;
+                        SQL
+                        sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, source_list_id])
+                        ActiveRecord::Base.connection.execute(sanitized_query)
 
-                #         query = <<~SQL
-                #             UPDATE items
-                #             SET ordering = p.row_number
-                #             FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM items WHERE items.swimlane_id = ?) AS p
-                #             WHERE items.id = p.id;
-                #         SQL
-                #         sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, destination_list_id])
-                #         ActiveRecord::Base.connection.execute(sanitized_query)
-                #     end
-                # rescue => e
-                #     # something went wrong, transaction rolled back
-                #     Rails.logger.error(e)
-                #     raise ActiveRecord::Rollback
-                #     render_internal_server_error
-                # end
+                        query = <<~SQL
+                            UPDATE items
+                            SET ordering = p.row_number
+                            FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY ordering) AS row_number FROM items WHERE items.swimlane_id = ?) AS p
+                            WHERE items.id = p.id;
+                        SQL
+                        sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, destination_list_id])
+                        ActiveRecord::Base.connection.execute(sanitized_query)
+                    end
+                rescue => e
+                    # something went wrong, transaction rolled back
+                    Rails.logger.error(e)
+                    raise ActiveRecord::Rollback
+                    render_internal_server_error
+                end
 
                 # reload board
                 @board = Board.includes(swimlanes: :items)

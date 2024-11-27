@@ -4,7 +4,13 @@
                         turbo_cache_control: "no-cache",
                         id: item.id
                     } do %>
-    <div class="border rounded border-gray-300 p-2 cursor-pointer bg-slate-100 min-h-10">
+    <% if item.title.empty? %>
+    <div class="shadow-sm border rounded border-gray-300 text-gray-300 italic p-2 cursor-pointer bg-slate-100 min-h-10">
+        Untitled
+    </div>
+    <% else %>
+    <div class="shadow-sm border rounded border-gray-300 p-2 cursor-pointer bg-slate-100 min-h-10">
         <%= item.title %>
     </div>
+    <% end %>
 <% end %>

@@ -1,17 +1,17 @@
 <div data-controller="editable-label" data-editable-label-identifier-value="<%= identifier %>" data-editable-label-original-value="<%= h label %>" class="flex">
-    <button class="flex flex-row flex-1 justify-start items-center space-x-1 flex-nowrap cursor-pointer leading-6 p-1 border border-transparent"
+    <button class="flex flex-row flex-1 justify-start items-center space-x-1 flex-nowrap cursor-pointer leading-6 p-1 border-2 border-transparent group"
         data-editable-label-target="label"
         data-action="editable-label#edit">
         <span class="<%= label_class %>"><%= label %></span>
-        <%= inline_svg_tag "edit.svg", class: "text-gray-400 h-4 aspect-square block hover:text-gray-600 transition-all" %>
+        <%= inline_svg_tag "edit.svg", class: "text-gray-400 h-4 aspect-square block group-hover:text-gray-600 transition-all" %>
     </button>
-    <div class="flex flex-row flex-1 items-baseline space-x-2 bg-white border border-gray-400 p-2 leading-6" data-editable-label-target="input">
+    <div class="flex flex-row flex-1 items-center space-x-1 bg-white border border-gray-400 p-2 leading-6 rounded" data-editable-label-target="input">
         <input type="text" class="<%= editor_class%> flex-1 border-none h-full outline-none p-0 focus:border-none focus:outline-none focus:ring-0" value="<%= h label %>">
-        <button data-action="editable-label#confirm" class="cursor-pointer p-0 flex-1">
-            <%= inline_svg_tag "ok.svg", class: "h-4 aspect-square text-green-500" %>
+        <button data-action="editable-label#confirm" class="cursor-pointer p-1 flex-1 rounded bg-gray-200">
+            <%= inline_svg_tag "ok.svg", class: "h-4 aspect-square text-emerald-400" %>
         </button>
-        <button data-action="editable-label#cancel" class="cursor-pointer p-0 flex-1">
-            <%= inline_svg_tag "cancel.svg", class: "h-4 aspect-square text-red-500" %>
+        <button data-action="editable-label#cancel" class="cursor-pointer p-1 flex-1 rounded bg-gray-200">
+            <%= inline_svg_tag "cancel.svg", class: "h-4 aspect-square text-pink-400" %>
         </button>
     </div>
 </div>

@@ -13,11 +13,16 @@ export default class extends Controller {
       ghostClass: "ghost-class", // see application.tailwind.css for this utility class
       dragClass: "drag-class",
       chosenClass: "chosen-class",
+      forceFallback: true,
+      onChoose: this.onChoose.bind(this),
       onEnd: this.onEnd.bind(this),
     });
   }
 
   disconnect() {
+  }
+
+  onChoose(event) {
   }
 
   onEnd(event) {
@@ -41,18 +46,18 @@ export default class extends Controller {
       destinationIndex,
     };
 
-    console.log(eventData);
+    // console.log(eventData);
     if (eventData.sourceListID === eventData.destinationListID && eventData.sourceIndex === eventData.destinationIndex) {
-      console.log('Unchanged positioning detected.');
+      // console.log('Unchanged positioning detected.');
       return;
     }
 
     if (eventData.sourceListID === eventData.destinationListID) {
-      console.log(`Reordering in list id ${eventData.sourceListID} detected.`);
+      // console.log(`Reordering in list id ${eventData.sourceListID} detected.`);
     } else {
-      console.log(`Crossed-List reordering from list id ${eventData.sourceListID} to list id ${eventData.destinationListID} detected with item id ${eventData.draggedItemID}.`);
+      // console.log(`Crossed-List reordering from list id ${eventData.sourceListID} to list id ${eventData.destinationListID} detected with item id ${eventData.draggedItemID}.`);
     }
-    console.log('moved', { detail: eventData, prefix: this.identifierValue });
+    // console.log('moved', { detail: eventData, prefix: this.identifierValue });
     this.dispatch('moved', { detail: eventData, prefix: this.identifierValue });
   }
 }

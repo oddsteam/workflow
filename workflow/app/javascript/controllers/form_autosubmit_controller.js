@@ -8,7 +8,7 @@ export default class extends Controller {
   submitEventData(event) {
     event.preventDefault();
     // event.stopPropagation();
-    console.log('submitted', event.detail);
+    // console.log('submitted', event.detail);
    // console.log('element', this.element);
    // console.log('token', this.element.querySelector('input[name="authenticity_token"]'));
 

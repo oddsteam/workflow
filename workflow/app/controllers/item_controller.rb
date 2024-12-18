@@ -172,7 +172,54 @@ class ItemController < ApplicationController
         end
     end
 
+    def rename()
+        board_key = params[:key]
+        item_id = params[:id]
+        @board = Board.find_by(key: board_key)
+        if @board.present? and belong_to_board?(item_id, @board)
+            post_data = JSON.parse(request.body.read)
+
+            new_item_title = post_data['new']
+            Item.where(id: item_id).update(title: new_item_title)
+
+            @item = Item.find_by(id: item_id)
+            if @item.present?
+                respond_to do |format|
+                    format.turbo_stream {
+                        render turbo_stream: [
+                            turbo_stream
+                                .replace("item_#{@item.id}_entry",
+                                partial: "shared/item_entry",
+                                locals: { board: @board, item: @item }),
+                        ]
+                    }
+                    format.html { render file: "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error }
+                    format.any  { head :internal_server_error }
+                end
+            else
+                Rails.logger.debug("board is updated but cannot be refreshed")
+                render_not_found
+            end
+        end
+    end
+
     private
+
+    def belong_to_board?(item_id, board)
+        @item = Item.where(id: item_id)
+        if !@item.present?
+            Rails.logger.debug("Renaming item does not present")
+            return false
+        end
+
+        @swimlane = Swimlane.where(id: @item.first.swimlane_id)
+        if !@swimlane.present?
+            Rails.logger.debug("Swimlane does not present in the board")
+            return false
+        end
+
+        return @swimlane.first.board_id == board.id
+    end
 
     def valid_move?(item_id, board, source_list_id, destination_list_id, new_ordering)
         # Validate operation : valid item?

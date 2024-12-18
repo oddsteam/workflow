@@ -4,13 +4,33 @@
                         turbo_cache_control: "no-cache",
                         id: item.id
                     } do %>
+    <%= form_with   :method => :post, 
+                    :url => item_rename_path(board.key, item.id),
+                    :data => {  
+                        "turbo": true,
+                        "controller": "form-autosubmit",
+                        "action": "item-#{item.id}-title:changed@window->form-autosubmit#submitEventData",
+                    } do |form| %>
+    <% end %>
     <% if item.title.empty? %>
-    <div class="shadow-sm border rounded border-gray-300 text-gray-300 italic p-2 cursor-pointer bg-slate-100 min-h-10">
-        Untitled
-    </div>
+        <div class="flex relative shadow-sm border rounded border-gray-300 text-gray-300 italic p-1 pl-2 pr-8 cursor-pointer bg-slate-100 min-h-10 group">
+            <%= render "shared/editable_label", 
+                label: "Untitled",
+                label_class: "border border-transparent",
+                editor_class: "text-gray-900",
+                identifier: "item-#{item.id}-title",
+                max_width_modifier: -40 %>
+            <%= render "shared/item_quick_menu" %>
+        </div>
     <% else %>
-    <div class="shadow-sm border rounded border-gray-300 p-2 cursor-pointer bg-slate-100 min-h-10">
-        <%= item.title %>
-    </div>
+        <div class="flex relative shadow-sm border rounded border-gray-300 p-1 pl-2 pr-8 cursor-pointer bg-slate-100 min-h-10 group">
+            <%= render "shared/editable_label", 
+                label: item.title,
+                label_class: "border border-transparent",
+                editor_class: "text-gray-900",
+                identifier: "item-#{item.id}-title",
+                max_width_modifier: -40 %>
+            <%= render "shared/item_quick_menu" %>
+        </div>
     <% end %>
 <% end %>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <!-- border -->
+    <path d="M12 1.5l-7.5 0q-3 0 -3 3l0 15q0 3 3 3l15 0q3 0 3 -3l0 -7.5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+    <!-- pencil -->
+    <path d="M18 1l-10 10l-1 6l6 -1l10 -10q1 -1 0 -2l-3 -3q-1 -1 -2 0z"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>

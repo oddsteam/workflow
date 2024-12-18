@@ -1,17 +1,11 @@
-<div data-controller="editable-label" data-editable-label-identifier-value="<%= identifier %>" data-editable-label-original-value="<%= h label %>" class="flex">
-    <button class="flex flex-row flex-1 justify-start items-center space-x-1 flex-nowrap cursor-pointer leading-6 p-1 border-2 border-transparent group"
+<div data-controller="editable-label" data-editable-label-identifier-value="<%= identifier %>" data-editable-label-max-width-value="<%= defined?(max_width) ? max_width : 0 %>" data-editable-label-max-width-modifier-value="<%= defined?(max_width_modifier) ? max_width_modifier : 0 %>" class="flex">
+    <span class="absolute -left-[10000px] p-1 <%= editor_class %>" data-editable-label-target="measure"></span>
+    <button class="flex flex-row flex-1 justify-start items-start space-x-1 flex-nowrap cursor-text py-[2px] px-1 border-1 rounded border-transparent hover:border-gray-400 text-left <%= label_class %>"
         data-editable-label-target="label"
         data-action="editable-label#edit">
-        <span class="<%= label_class %>"><%= label %></span>
-        <%= inline_svg_tag "edit.svg", class: "text-gray-400 h-4 aspect-square block group-hover:text-gray-600 transition-all" %>
+        <%= label %>
     </button>
-    <div class="flex flex-row flex-1 items-center space-x-1 bg-white border border-gray-400 p-2 leading-6 rounded" data-editable-label-target="input">
-        <input type="text" class="<%= editor_class%> flex-1 border-none h-full outline-none p-0 focus:border-none focus:outline-none focus:ring-0" value="<%= h label %>">
-        <button data-action="editable-label#confirm" class="cursor-pointer p-1 flex-1 rounded bg-gray-200">
-            <%= inline_svg_tag "ok.svg", class: "h-4 aspect-square text-emerald-400" %>
-        </button>
-        <button data-action="editable-label#cancel" class="cursor-pointer p-1 flex-1 rounded bg-gray-200">
-            <%= inline_svg_tag "cancel.svg", class: "h-4 aspect-square text-pink-400" %>
-        </button>
+    <div class="flex bg-white border border-gray-400 rounded px-1 overflow-hidden" data-editable-label-target="input">
+        <input type="text" class="<%= editor_class %> max-w-full border-none h-full outline-none p-0 pt-1 pb-[6.25px] focus:border-none focus:outline-none focus:ring-0" value="<%= h label %>">
     </div>
 </div>

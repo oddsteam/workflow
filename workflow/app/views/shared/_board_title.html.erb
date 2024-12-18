@@ -1,0 +1,21 @@
+<%= turbo_frame_tag "board_#{board.id}_title",
+                    :data => {
+                        turbo_cache_control: "no-cache",
+                        id: board.id
+                    } do %>
+    <%= form_with   :method => :post, 
+                    :url => board_rename_path(board.key),
+                    :data => {  
+                        "turbo": true,
+                        "controller": "form-autosubmit",
+                        "action": "board-title:changed@window->form-autosubmit#submitEventData",
+                    } do |form| %>
+    <% end %>
+    <%= render "shared/editable_label", 
+        label: board.title,
+        label_class: "font-bold text-lg border border-transparent",
+        editor_class: "font-bold text-lg",
+        identifier: "board-title",
+        max_width: 250
+    %>
+<% end %>

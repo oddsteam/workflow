@@ -1,0 +1,24 @@
+<%= turbo_frame_tag "board_entries",
+                    :class => "flex flex-row flex-1 w-full bg-white overflow-x-hidden",
+                    :data => {
+                        turbo_cache_control: "no-cache"
+                    } do %>
+    <%= form_with   :method => :post, 
+                    :url => swimlane_position_path(board.key),
+                    :class => "hidden",
+                    :data => {  
+                        "turbo": true,
+                        "controller": "form-autosubmit",
+                        "action": "swimlanes:moved@window->form-autosubmit#submitEventData",
+                    } do |form| %>
+    <% end %>
+    <div class="flex flex-row flex-1 flex-nowrap space-x-2 w-full bg-white p-4 overflow-x-auto"
+        data-controller="draggable-item"
+        data-draggable-item-group-value="board"
+        data-draggable-item-identifier-value="swimlanes"
+        data-id="<%=@board.id%>">
+        <% board.swimlanes.each do |swimlane| %>
+            <%= render "shared/swimlane_entries", board: board, swimlane: swimlane %>
+        <% end %>
+    </div>
+<% end %>

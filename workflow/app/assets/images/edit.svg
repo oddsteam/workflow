@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <!-- pencil -->
+    <path d="M18 1l-16.5 16.5l-1 6l6 -1l16.5 -16.5q1 -1 0 -2l-3 -3q-1 -1 -2 0z"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>

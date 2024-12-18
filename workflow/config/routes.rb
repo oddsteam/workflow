@@ -1,8 +1,13 @@
 Rails.application.routes.draw do
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  get "workspace" => "board#index"
+  get "workspace" => "board#index", as: :workspace
   resources :board, :param => :key
+  post "board/:key/rename" => "board#rename", as: :board_rename
+  post "board/:key/swimlane/move" => "swimlane#move", as: :swimlane_position
+  post "board/:key/item/move" => "item#move", as: :item_position
+  post "board/:key/item/:id/rename" => "item#rename", as: :item_rename
+  post "board/:key/swimlane/:lane/item" => "item#create", as: :item_creation
 
   # get "board" => "board#index"
   # post "board" => "board#create"

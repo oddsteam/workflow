@@ -39,15 +39,40 @@ class BoardController < ApplicationController
 
     def show()
         board_key = params[:key]
-        @board = Board.find_by(
-            key: board_key
-        )
-        if @board
-            @swimlanes = Swimlane.where(
-                board_id: @board.id
-            ).order(:ordering)
-        else
+        @board = Board.includes(swimlanes: :items)
+                    .find_by(key: board_key)
+        if !@board.present?
             render_not_found
+        end
+    end
+
+    def rename()
+        board_key = params[:key]
+        @board = Board.find_by(key: board_key)
+        if @board.present?
+            post_data = JSON.parse(request.body.read)
+
+            new_board_title = post_data['new']
+            Board.where(key: board_key).update(title: new_board_title)
+
+            @board = Board.find_by(key: board_key)
+            if @board.present?
+                respond_to do |format|
+                    format.turbo_stream {
+                        render turbo_stream: [
+                            turbo_stream
+                                .replace("board_#{@board.id}_title",
+                                partial: "shared/board_title",
+                                locals: { board: @board }),
+                        ]
+                    }
+                    format.html { render file: "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error }
+                    format.any  { head :internal_server_error }
+                end
+            else
+                Rails.logger.debug("board is updated but cannot be refreshed")
+                render_not_found
+            end
         end
     end
 
